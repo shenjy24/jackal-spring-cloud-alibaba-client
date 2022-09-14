@@ -21,7 +21,8 @@ import java.util.Map;
 @RequestMapping("/user")
 public class UserController {
 
-    private static final String API = "http://service-provider/user/getUserName?userId={userId}";
+    private static final String GET_API = "http://service-provider/user/getUserName?userId={userId}";
+    private static final URI POST_API = URI.create("http://service-provider/user/getUserName");
 
     @Autowired
     private RestTemplate restTemplate;
@@ -31,14 +32,13 @@ public class UserController {
         Map<String, Object> args = new HashMap<String, Object>() {{
            put("userId", userId);
         }};
-        return restTemplate.getForObject(API, String.class, args);
+        return restTemplate.getForObject(GET_API, String.class, args);
     }
 
     @PostMapping("postName")
     public String postName(Integer userId) {
         MultiValueMap<String, Integer> request = new LinkedMultiValueMap<>();
         request.add("userId", userId);
-        URI uri = URI.create("http://service-provider/user/getUserName");
-        return restTemplate.postForObject(uri, request, String.class);
+        return restTemplate.postForObject(POST_API, request, String.class);
     }
 }
